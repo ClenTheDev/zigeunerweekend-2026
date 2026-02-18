@@ -78,6 +78,7 @@ export default function WeekendPage() {
   const [currentUser, setCurrentUser] = useState<{
     id: string;
     name: string;
+    email: string;
     emoji: string;
   } | null>(null);
   const [hydrated, setHydrated] = useState(false);
@@ -111,10 +112,24 @@ export default function WeekendPage() {
   // Don't render anything until we've checked localStorage
   if (!hydrated) {
     return (
-      <div className="bg-hero min-h-dvh flex items-center justify-center">
-        <div className="flex flex-col items-center gap-3 text-stone-400">
-          <span className="inline-block w-8 h-8 border-4 border-orange-300 border-t-transparent rounded-full animate-spin" />
-          <span className="text-sm font-medium">Even laden…</span>
+      <div
+        className="min-h-dvh flex items-center justify-center"
+        style={{ background: '#0a0a0a' }}
+      >
+        <div className="flex flex-col items-center gap-3">
+          <span
+            className="inline-block w-9 h-9 rounded-full animate-spin"
+            style={{
+              border: '3px solid rgba(251,191,36,0.2)',
+              borderTopColor: '#f59e0b',
+            }}
+          />
+          <span
+            className="text-sm font-bold tracking-widest uppercase"
+            style={{ color: '#a16207' }}
+          >
+            Laden…
+          </span>
         </div>
       </div>
     );
@@ -130,30 +145,45 @@ export default function WeekendPage() {
   };
 
   return (
-    <div className="min-h-dvh flex flex-col" style={{ background: 'var(--color-bg)' }}>
+    <div
+      className="min-h-dvh flex flex-col"
+      style={{ background: '#0a0a0a' }}
+    >
       {/* ---------------------------------------------------------------- */}
       {/* Top header                                                        */}
       {/* ---------------------------------------------------------------- */}
       <header
-        className="sticky top-0 z-30 border-b"
+        className="sticky top-0 z-30"
         style={{
-          background: 'rgba(255,251,245,0.92)',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          borderColor: 'var(--color-border)',
-          boxShadow: 'var(--shadow-sm)',
+          background: 'rgba(10,10,10,0.85)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          borderBottom: '1px solid rgba(251,191,36,0.15)',
+          boxShadow: '0 4px 32px 0 rgba(0,0,0,0.6)',
         }}
       >
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
           {/* Title */}
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="text-2xl flex-shrink-0">🏕️</span>
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="text-2xl flex-shrink-0">🍺</span>
             <div className="min-w-0">
-              <h1 className="text-lg font-extrabold tracking-tight leading-tight text-gradient truncate">
-                Zigeunerweekend
+              <h1
+                className="text-lg font-black tracking-widest leading-tight uppercase truncate"
+                style={{
+                  background: 'linear-gradient(90deg, #f59e0b 0%, #84cc16 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  letterSpacing: '0.12em',
+                }}
+              >
+                ZIGEUNERWEEKEND
               </h1>
-              <p className="text-xs text-stone-400 font-medium hidden sm:block truncate">
-                6 t/m 8 maart 2026 &bull; Resort Arcen
+              <p
+                className="text-xs font-bold tracking-widest hidden sm:block truncate uppercase"
+                style={{ color: '#57534e', letterSpacing: '0.1em' }}
+              >
+                6-8 MAART 2026 &bull; Resort Arcen
               </p>
             </div>
           </div>
@@ -161,11 +191,11 @@ export default function WeekendPage() {
           {/* User chip + logout */}
           <div className="flex items-center gap-2 flex-shrink-0">
             <span
-              className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold border"
+              className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-bold"
               style={{
-                background: 'var(--color-bg-muted)',
-                borderColor: 'var(--color-border)',
-                color: 'var(--color-text)',
+                background: 'rgba(251,191,36,0.08)',
+                border: '1.5px solid rgba(251,191,36,0.4)',
+                color: '#fbbf24',
               }}
             >
               <span className="text-base">{currentUser.emoji}</span>
@@ -177,8 +207,20 @@ export default function WeekendPage() {
               onClick={handleLogout}
               title="Uitloggen"
               aria-label="Uitloggen"
-              className="btn btn-outline text-xs px-3 py-1.5 h-auto"
-              style={{ borderWidth: '1.5px' }}
+              className="text-xs font-bold px-3 py-1.5 rounded-full transition-all duration-150 cursor-pointer"
+              style={{
+                background: 'transparent',
+                border: '1.5px solid rgba(120,113,108,0.4)',
+                color: '#78716c',
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(251,191,36,0.5)';
+                (e.currentTarget as HTMLButtonElement).style.color = '#fbbf24';
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(120,113,108,0.4)';
+                (e.currentTarget as HTMLButtonElement).style.color = '#78716c';
+              }}
             >
               <span className="hidden sm:inline">Uitloggen</span>
               <span className="sm:hidden">↩</span>
@@ -191,10 +233,10 @@ export default function WeekendPage() {
         {/* ---------------------------------------------------------------- */}
         <nav
           aria-label="Secties"
-          className="flex overflow-x-auto no-scrollbar border-t"
-          style={{ borderColor: 'var(--color-border)' }}
+          className="flex overflow-x-auto no-scrollbar"
+          style={{ borderTop: '1px solid rgba(251,191,36,0.08)' }}
         >
-          <div className="flex min-w-max px-2 gap-0.5 max-w-4xl mx-auto w-full">
+          <div className="flex min-w-max px-2 gap-0 max-w-4xl mx-auto w-full">
             {TABS.map((tab) => {
               const isActive = activeTab === tab.id;
               const count = tab.badge ? tab.badge(data, currentUser.id) : 0;
@@ -204,14 +246,13 @@ export default function WeekendPage() {
                   onClick={() => setActiveTab(tab.id)}
                   aria-selected={isActive}
                   role="tab"
-                  className="relative flex flex-col items-center gap-0.5 px-3 py-2.5 text-xs font-semibold transition-all duration-150 whitespace-nowrap flex-shrink-0 cursor-pointer group"
+                  className="relative flex flex-col items-center gap-0.5 px-3 py-2.5 text-xs font-bold transition-all duration-150 whitespace-nowrap flex-shrink-0 cursor-pointer uppercase tracking-wider"
                   style={{
-                    color: isActive
-                      ? 'var(--color-primary)'
-                      : 'var(--color-text-muted)',
+                    color: isActive ? '#f59e0b' : '#57534e',
                     borderBottom: isActive
-                      ? '2px solid var(--color-primary)'
+                      ? '2px solid #f59e0b'
                       : '2px solid transparent',
+                    letterSpacing: '0.06em',
                   }}
                 >
                   {/* Icon row with badge */}
@@ -219,11 +260,10 @@ export default function WeekendPage() {
                     <span className="text-base leading-none">{tab.icon}</span>
                     {count > 0 && (
                       <span
-                        className="absolute -top-1.5 -right-2 min-w-[16px] h-4 rounded-full text-white flex items-center justify-center font-bold"
+                        className="absolute -top-1.5 -right-2 min-w-[16px] h-4 rounded-full flex items-center justify-center font-black"
                         style={{
-                          background: isActive
-                            ? 'var(--color-primary)'
-                            : 'var(--color-accent)',
+                          background: isActive ? '#f59e0b' : '#dc2626',
+                          color: isActive ? '#0a0a0a' : '#fff',
                           fontSize: '9px',
                           padding: '0 3px',
                         }}
@@ -244,18 +284,26 @@ export default function WeekendPage() {
       {/* ---------------------------------------------------------------- */}
       {/* Main content area                                                 */}
       {/* ---------------------------------------------------------------- */}
-      <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-6">
+      <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-6 pb-24 sm:pb-6">
         {isLoading && (
           <div
-            className="w-full rounded-2xl border px-4 py-3 mb-4 flex items-center gap-2 text-sm font-medium"
+            className="w-full rounded-xl px-4 py-3 mb-4 flex items-center gap-3 text-sm font-bold"
             style={{
-              background: 'var(--color-bg-muted)',
-              borderColor: 'var(--color-border)',
-              color: 'var(--color-text-muted)',
+              background: 'rgba(251,191,36,0.06)',
+              border: '1px solid rgba(251,191,36,0.2)',
+              color: '#a16207',
             }}
           >
-            <span className="inline-block w-4 h-4 border-2 border-orange-300 border-t-transparent rounded-full animate-spin flex-shrink-0" />
-            Gegevens worden gesynchroniseerd…
+            <span
+              className="inline-block w-4 h-4 rounded-full animate-spin flex-shrink-0"
+              style={{
+                border: '2px solid rgba(251,191,36,0.2)',
+                borderTopColor: '#f59e0b',
+              }}
+            />
+            <span className="uppercase tracking-widest text-xs">
+              Gegevens worden gesynchroniseerd…
+            </span>
           </div>
         )}
 
@@ -275,13 +323,13 @@ export default function WeekendPage() {
       {/* ---------------------------------------------------------------- */}
       <nav
         aria-label="Snelnavigatie"
-        className="sm:hidden sticky bottom-0 z-20 border-t"
+        className="sm:hidden fixed bottom-0 inset-x-0 z-20"
         style={{
-          background: 'rgba(255,251,245,0.95)',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          borderColor: 'var(--color-border)',
-          boxShadow: '0 -4px 16px 0 rgb(249 115 22 / 0.08)',
+          background: 'rgba(10,10,10,0.95)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          borderTop: '1px solid rgba(251,191,36,0.15)',
+          boxShadow: '0 -8px 32px 0 rgba(0,0,0,0.7)',
         }}
       >
         <div className="flex overflow-x-auto no-scrollbar">
@@ -293,30 +341,41 @@ export default function WeekendPage() {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 aria-selected={isActive}
-                className="relative flex flex-col items-center gap-1 px-3 py-2 flex-1 min-w-[60px] text-xs font-semibold transition-all duration-150 cursor-pointer"
+                className="relative flex flex-col items-center gap-1 px-3 py-2 flex-1 min-w-[60px] text-xs font-bold transition-all duration-150 cursor-pointer"
                 style={{
-                  color: isActive ? 'var(--color-primary)' : 'var(--color-text-muted)',
+                  color: isActive ? '#f59e0b' : '#44403c',
                 }}
               >
+                {/* Amber glow top indicator for active tab */}
+                {isActive && (
+                  <span
+                    className="absolute top-0 inset-x-1 h-0.5 rounded-b-full"
+                    style={{
+                      background: 'linear-gradient(90deg, #f59e0b, #84cc16)',
+                      boxShadow: '0 0 8px 1px rgba(245,158,11,0.6)',
+                    }}
+                    aria-hidden="true"
+                  />
+                )}
                 <span className="relative">
                   <span className="text-xl leading-none">{tab.icon}</span>
                   {count > 0 && !isActive && (
                     <span
-                      className="absolute -top-1 -right-1.5 w-3.5 h-3.5 rounded-full bg-fuchsia-500 border border-white"
+                      className="absolute -top-1 -right-1.5 w-3.5 h-3.5 rounded-full"
+                      style={{
+                        background: '#dc2626',
+                        border: '1.5px solid #0a0a0a',
+                      }}
                       aria-hidden="true"
                     />
                   )}
                 </span>
-                <span className="truncate w-full text-center leading-none" style={{ fontSize: '9px' }}>
+                <span
+                  className="truncate w-full text-center leading-none uppercase"
+                  style={{ fontSize: '9px', letterSpacing: '0.04em' }}
+                >
                   {tab.label}
                 </span>
-                {isActive && (
-                  <span
-                    className="absolute top-0 inset-x-0 h-0.5 rounded-b-full"
-                    style={{ background: 'var(--color-primary)' }}
-                    aria-hidden="true"
-                  />
-                )}
               </button>
             );
           })}

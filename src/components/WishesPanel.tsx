@@ -12,26 +12,29 @@ interface PanelProps {
 type Category = 'eten' | 'drinken' | 'overig';
 
 const CATEGORIES: { value: Category; label: string; emoji: string; color: string }[] = [
-  { value: 'eten',    label: 'Eten',    emoji: '🍽️', color: 'orange' },
-  { value: 'drinken', label: 'Drinken', emoji: '🍺', color: 'amber'  },
+  { value: 'eten',    label: 'Eten',    emoji: '🍽️', color: 'amber'  },
+  { value: 'drinken', label: 'Drinken', emoji: '🍺', color: 'green'  },
   { value: 'overig',  label: 'Overig',  emoji: '✨', color: 'purple' },
 ];
 
-const COLOR_MAP: Record<string, { tab: string; badge: string; card: string }> = {
-  orange: {
-    tab:   'bg-orange-500 text-white shadow-sm',
-    badge: 'bg-orange-100 text-orange-700',
-    card:  'border-orange-200 hover:border-orange-300',
-  },
+const COLOR_MAP: Record<string, { tab: string; badge: string; card: string; border: string }> = {
   amber: {
-    tab:   'bg-amber-500 text-white shadow-sm',
-    badge: 'bg-amber-100 text-amber-700',
-    card:  'border-amber-200 hover:border-amber-300',
+    tab:    'bg-amber-500 text-black shadow-sm font-bold',
+    badge:  'bg-amber-500/20 text-amber-400 border border-amber-500/30',
+    card:   'hover:border-amber-600',
+    border: 'border-l-amber-500',
+  },
+  green: {
+    tab:    'bg-green-500 text-black shadow-sm font-bold',
+    badge:  'bg-green-500/20 text-green-400 border border-green-500/30',
+    card:   'hover:border-green-600',
+    border: 'border-l-green-500',
   },
   purple: {
-    tab:   'bg-purple-500 text-white shadow-sm',
-    badge: 'bg-purple-100 text-purple-700',
-    card:  'border-purple-200 hover:border-purple-300',
+    tab:    'bg-purple-500 text-white shadow-sm font-bold',
+    badge:  'bg-purple-500/20 text-purple-400 border border-purple-500/30',
+    card:   'hover:border-purple-600',
+    border: 'border-l-purple-500',
   },
 };
 
@@ -86,8 +89,8 @@ export default function WishesPanel({ data, currentUser }: PanelProps) {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold text-gray-800">Wensen</h2>
-        <p className="text-sm text-gray-500 mt-0.5">
+        <h2 className="text-2xl font-bold text-white">Wensen</h2>
+        <p className="text-sm text-zinc-400 mt-0.5">
           Wat wil jij eten, drinken of doen dit weekend?
         </p>
       </div>
@@ -95,9 +98,9 @@ export default function WishesPanel({ data, currentUser }: PanelProps) {
       {/* Add wish form */}
       <form
         onSubmit={handleAddWish}
-        className="bg-white rounded-xl shadow-md border border-gray-100 p-5 space-y-4"
+        className="bg-zinc-900 rounded-xl border border-zinc-800 p-5 space-y-4"
       >
-        <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide">
+        <h3 className="font-bold text-zinc-300 text-sm uppercase tracking-widest">
           Wens toevoegen
         </h3>
         <div className="flex flex-col sm:flex-row gap-3">
@@ -105,8 +108,8 @@ export default function WishesPanel({ data, currentUser }: PanelProps) {
             value={wishCategory}
             onChange={(e) => setWishCategory(e.target.value as Category)}
             className="
-              sm:w-36 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm
-              text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-400
+              sm:w-36 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm
+              text-white focus:outline-none focus:ring-2 focus:ring-amber-500
               focus:border-transparent transition
             "
           >
@@ -124,9 +127,9 @@ export default function WishesPanel({ data, currentUser }: PanelProps) {
             placeholder="Typ hier jouw wens..."
             maxLength={200}
             className="
-              flex-1 rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm
-              text-gray-700 placeholder:text-gray-400 focus:outline-none
-              focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition
+              flex-1 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-sm
+              text-white placeholder:text-zinc-500 focus:outline-none
+              focus:ring-2 focus:ring-amber-500 focus:border-transparent transition
             "
           />
 
@@ -134,8 +137,8 @@ export default function WishesPanel({ data, currentUser }: PanelProps) {
             type="submit"
             disabled={submitting || !wishText.trim()}
             className="
-              sm:w-28 bg-indigo-600 text-white text-sm font-semibold rounded-lg
-              px-4 py-2.5 hover:bg-indigo-700 active:bg-indigo-800
+              sm:w-28 bg-amber-600 text-black text-sm font-bold rounded-lg
+              px-4 py-2.5 hover:bg-amber-500 active:bg-amber-700
               disabled:opacity-50 disabled:cursor-not-allowed transition-colors
             "
           >
@@ -143,7 +146,7 @@ export default function WishesPanel({ data, currentUser }: PanelProps) {
           </button>
         </div>
         {error && (
-          <p className="text-red-500 text-xs">{error}</p>
+          <p className="text-red-400 text-xs">{error}</p>
         )}
       </form>
 
@@ -152,10 +155,10 @@ export default function WishesPanel({ data, currentUser }: PanelProps) {
         <button
           onClick={() => setActiveCategory('alle')}
           className={`
-            px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-150
+            px-4 py-1.5 rounded-full text-sm font-bold transition-all duration-150
             ${activeCategory === 'alle'
-              ? 'bg-gray-700 text-white shadow-sm'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              ? 'bg-white text-black shadow-sm'
+              : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
             }
           `}
         >
@@ -169,10 +172,10 @@ export default function WishesPanel({ data, currentUser }: PanelProps) {
               key={cat.value}
               onClick={() => setActiveCategory(cat.value)}
               className={`
-                px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-150
+                px-4 py-1.5 rounded-full text-sm font-bold transition-all duration-150
                 ${activeCategory === cat.value
                   ? colors.tab
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
                 }
               `}
             >
@@ -184,9 +187,9 @@ export default function WishesPanel({ data, currentUser }: PanelProps) {
 
       {/* Wishes list */}
       {filtered.length === 0 ? (
-        <div className="text-center py-12 text-gray-400">
-          <div className="text-4xl mb-2">🌟</div>
-          <p className="font-medium">Nog geen wensen in deze categorie</p>
+        <div className="text-center py-12 text-zinc-500">
+          <div className="text-4xl mb-2">🍺</div>
+          <p className="font-medium text-zinc-300">Nog geen wensen in deze categorie</p>
           <p className="text-sm mt-1">Voeg hierboven jouw eerste wens toe!</p>
         </div>
       ) : (
@@ -201,25 +204,25 @@ export default function WishesPanel({ data, currentUser }: PanelProps) {
               <div
                 key={wish.id}
                 className={`
-                  bg-white rounded-xl border-2 p-4 shadow-sm
-                  hover:shadow-md transition-all duration-200
-                  ${colors.card}
+                  bg-zinc-900 rounded-xl border-2 border-zinc-800 border-l-4 p-4
+                  hover:bg-zinc-800 transition-all duration-200
+                  ${colors.card} ${colors.border}
                 `}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-start gap-3 min-w-0">
                     <span className="text-2xl flex-shrink-0 mt-0.5">{cat.emoji}</span>
                     <div className="min-w-0">
-                      <p className="text-gray-800 font-medium leading-snug break-words">
+                      <p className="text-white font-medium leading-snug break-words">
                         {wish.text}
                       </p>
                       <div className="flex items-center gap-2 mt-1.5">
                         <span
-                          className={`text-xs font-semibold px-2 py-0.5 rounded-full ${colors.badge}`}
+                          className={`text-xs font-bold px-2 py-0.5 rounded-full ${colors.badge}`}
                         >
                           {cat.label}
                         </span>
-                        <span className="text-xs text-gray-400">
+                        <span className="text-xs text-zinc-500">
                           door {wish.participantName}
                         </span>
                       </div>
@@ -232,7 +235,7 @@ export default function WishesPanel({ data, currentUser }: PanelProps) {
                       disabled={isDeleting}
                       aria-label="Wens verwijderen"
                       className="
-                        flex-shrink-0 text-gray-300 hover:text-red-400
+                        flex-shrink-0 text-zinc-600 hover:text-red-400
                         transition-colors duration-150 disabled:opacity-50
                         disabled:cursor-not-allowed text-lg leading-none
                       "

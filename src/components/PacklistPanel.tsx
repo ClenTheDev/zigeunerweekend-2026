@@ -87,28 +87,28 @@ export default function PacklistPanel({ data, currentUser }: PanelProps) {
   const totalCount = packList.length;
 
   function getRowStyle(checked: boolean, assignedToId: string) {
-    if (checked) return 'bg-green-50 border-green-200';
-    if (assignedToId) return 'bg-yellow-50 border-yellow-200';
-    return 'bg-white border-gray-100';
+    if (checked) return 'bg-green-900/30 border-green-800';
+    if (assignedToId) return 'bg-amber-900/20 border-amber-800/50';
+    return 'bg-zinc-900 border-zinc-800';
   }
 
   function getStatusBadge(checked: boolean, assignedTo: string) {
     if (checked) {
       return (
-        <span className="text-xs font-semibold bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
+        <span className="text-xs font-bold bg-green-500/20 text-green-400 border border-green-500/30 px-2 py-0.5 rounded-full">
           Ingepakt ✓
         </span>
       );
     }
     if (assignedTo) {
       return (
-        <span className="text-xs font-semibold bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full">
+        <span className="text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full">
           Toegewezen
         </span>
       );
     }
     return (
-      <span className="text-xs font-semibold bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">
+      <span className="text-xs font-bold bg-zinc-700/50 text-zinc-400 border border-zinc-700 px-2 py-0.5 rounded-full">
         Niet toegewezen
       </span>
     );
@@ -119,33 +119,33 @@ export default function PacklistPanel({ data, currentUser }: PanelProps) {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-800">🎒 Paklijst</h2>
-          <p className="text-sm text-gray-500 mt-0.5">
+          <h2 className="text-2xl font-bold text-white">🎒 Paklijst</h2>
+          <p className="text-sm text-zinc-400 mt-0.5">
             Wie neemt wat mee?
           </p>
         </div>
         {totalCount > 0 && (
           <div className="text-right">
-            <div className="text-2xl font-bold text-indigo-600">
+            <div className="text-2xl font-bold text-amber-500">
               {checkedCount}/{totalCount}
             </div>
-            <div className="text-xs text-gray-400">ingepakt</div>
+            <div className="text-xs text-zinc-500">ingepakt</div>
           </div>
         )}
       </div>
 
       {/* Progress bar */}
       {totalCount > 0 && (
-        <div className="bg-gray-100 rounded-full h-2.5 overflow-hidden">
+        <div className="bg-zinc-800 rounded-full h-2.5 overflow-hidden">
           <div
-            className="bg-green-500 h-full rounded-full transition-all duration-500"
+            className="bg-amber-500 h-full rounded-full transition-all duration-500"
             style={{ width: `${Math.round((checkedCount / totalCount) * 100)}%` }}
           />
         </div>
       )}
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm">
+        <div className="bg-red-900/40 border border-red-700 text-red-400 rounded-xl px-4 py-3 text-sm">
           {error}
         </div>
       )}
@@ -153,9 +153,9 @@ export default function PacklistPanel({ data, currentUser }: PanelProps) {
       {/* Add item form */}
       <form
         onSubmit={handleAdd}
-        className="bg-white rounded-xl shadow-md border border-gray-100 p-5"
+        className="bg-zinc-900 rounded-xl border border-zinc-800 p-5"
       >
-        <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide mb-3">
+        <h3 className="font-bold text-zinc-300 text-sm uppercase tracking-widest mb-3">
           Item toevoegen
         </h3>
         <div className="flex gap-3">
@@ -166,17 +166,17 @@ export default function PacklistPanel({ data, currentUser }: PanelProps) {
             placeholder="Wat moet er mee? bijv. Slaapzak..."
             maxLength={100}
             className="
-              flex-1 rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm
-              text-gray-700 placeholder:text-gray-400 focus:outline-none
-              focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition
+              flex-1 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-sm
+              text-white placeholder:text-zinc-500 focus:outline-none
+              focus:ring-2 focus:ring-amber-500 focus:border-transparent transition
             "
           />
           <button
             type="submit"
             disabled={submitting || !itemText.trim()}
             className="
-              bg-indigo-600 text-white text-sm font-semibold rounded-lg
-              px-5 py-2.5 hover:bg-indigo-700 active:bg-indigo-800
+              bg-amber-600 text-black text-sm font-bold rounded-lg
+              px-5 py-2.5 hover:bg-amber-500 active:bg-amber-700
               disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap
             "
           >
@@ -187,15 +187,15 @@ export default function PacklistPanel({ data, currentUser }: PanelProps) {
 
       {/* Packlist table */}
       {packList.length === 0 ? (
-        <div className="text-center py-14 text-gray-400">
+        <div className="text-center py-14 text-zinc-500">
           <div className="text-5xl mb-3">🎒</div>
-          <p className="font-medium text-lg">Paklijst is leeg</p>
+          <p className="font-medium text-lg text-zinc-300">Paklijst is leeg</p>
           <p className="text-sm mt-1">Voeg items toe die jullie willen meenemen!</p>
         </div>
       ) : (
         <div className="space-y-2">
           {/* Column headers (hidden on mobile) */}
-          <div className="hidden sm:grid sm:grid-cols-12 gap-2 px-4 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide">
+          <div className="hidden sm:grid sm:grid-cols-12 gap-2 px-4 py-1.5 text-xs font-bold text-zinc-500 uppercase tracking-widest">
             <div className="col-span-1">Status</div>
             <div className="col-span-4">Item</div>
             <div className="col-span-4">Wie neemt mee?</div>
@@ -212,7 +212,7 @@ export default function PacklistPanel({ data, currentUser }: PanelProps) {
                 key={packItem.id}
                 className={`
                   rounded-xl border-2 px-4 py-3 transition-all duration-200
-                  hover:shadow-md
+                  hover:brightness-110
                   ${getRowStyle(packItem.checked, packItem.assignedToId)}
                 `}
               >
@@ -230,21 +230,21 @@ export default function PacklistPanel({ data, currentUser }: PanelProps) {
                           w-6 h-6 rounded-full border-2 flex items-center justify-center text-sm
                           transition-all duration-150
                           ${packItem.checked
-                            ? 'bg-green-500 border-green-500 text-white'
-                            : 'border-gray-300 bg-white'
+                            ? 'bg-green-500 border-green-500 text-black font-bold'
+                            : 'border-zinc-600 bg-zinc-800 hover:border-amber-500'
                           }
                         `}>
                           {packItem.checked && '✓'}
                         </span>
                       </button>
-                      <span className={`font-medium text-sm ${packItem.checked ? 'line-through text-gray-400' : 'text-gray-800'}`}>
+                      <span className={`font-medium text-sm ${packItem.checked ? 'line-through text-zinc-500' : 'text-white'}`}>
                         {packItem.item}
                       </span>
                     </div>
                     <button
                       onClick={() => handleDelete(packItem.id)}
                       disabled={isDeleting}
-                      className="text-gray-300 hover:text-red-400 transition-colors text-base"
+                      className="text-zinc-600 hover:text-red-400 transition-colors text-base"
                     >
                       {isDeleting ? '⏳' : '✕'}
                     </button>
@@ -255,7 +255,7 @@ export default function PacklistPanel({ data, currentUser }: PanelProps) {
                       value={packItem.assignedToId}
                       onChange={(e) => handleAssign(packItem.id, e.target.value)}
                       disabled={isUpdating || packItem.checked}
-                      className="text-xs rounded-lg border border-gray-200 bg-white px-2 py-1 text-gray-600 disabled:opacity-50"
+                      className="text-xs rounded-lg border border-zinc-700 bg-zinc-800 px-2 py-1 text-zinc-300 disabled:opacity-50"
                     >
                       <option value="">Niemand</option>
                       {participants.map((p) => (
@@ -278,8 +278,8 @@ export default function PacklistPanel({ data, currentUser }: PanelProps) {
                         w-6 h-6 rounded-full border-2 flex items-center justify-center text-sm
                         transition-all duration-150
                         ${packItem.checked
-                          ? 'bg-green-500 border-green-500 text-white'
-                          : 'border-gray-300 bg-white hover:border-gray-400'
+                          ? 'bg-green-500 border-green-500 text-black font-bold'
+                          : 'border-zinc-600 bg-zinc-800 hover:border-amber-500'
                         }
                       `}>
                         {packItem.checked && '✓'}
@@ -289,10 +289,10 @@ export default function PacklistPanel({ data, currentUser }: PanelProps) {
 
                   {/* Item name */}
                   <div className="col-span-4">
-                    <span className={`text-sm font-medium ${packItem.checked ? 'line-through text-gray-400' : 'text-gray-800'}`}>
+                    <span className={`text-sm font-medium ${packItem.checked ? 'line-through text-zinc-500' : 'text-white'}`}>
                       {packItem.item}
                     </span>
-                    <span className="text-xs text-gray-400 ml-1.5">door {packItem.addedBy}</span>
+                    <span className="text-xs text-zinc-500 ml-1.5">door {packItem.addedBy}</span>
                   </div>
 
                   {/* Assign dropdown */}
@@ -302,9 +302,9 @@ export default function PacklistPanel({ data, currentUser }: PanelProps) {
                       onChange={(e) => handleAssign(packItem.id, e.target.value)}
                       disabled={isUpdating || packItem.checked}
                       className="
-                        w-full text-sm rounded-lg border border-gray-200 bg-white
-                        px-2.5 py-1.5 text-gray-700 focus:outline-none focus:ring-2
-                        focus:ring-indigo-400 focus:border-transparent transition
+                        w-full text-sm rounded-lg border border-zinc-700 bg-zinc-800
+                        px-2.5 py-1.5 text-zinc-300 focus:outline-none focus:ring-2
+                        focus:ring-amber-500 focus:border-transparent transition
                         disabled:opacity-50 disabled:cursor-not-allowed
                       "
                     >
@@ -328,7 +328,7 @@ export default function PacklistPanel({ data, currentUser }: PanelProps) {
                       onClick={() => handleDelete(packItem.id)}
                       disabled={isDeleting}
                       aria-label="Verwijderen"
-                      className="text-gray-300 hover:text-red-400 transition-colors disabled:opacity-50"
+                      className="text-zinc-600 hover:text-red-400 transition-colors disabled:opacity-50"
                     >
                       {isDeleting ? '⏳' : '✕'}
                     </button>
@@ -341,17 +341,17 @@ export default function PacklistPanel({ data, currentUser }: PanelProps) {
       )}
 
       {/* Legend */}
-      <div className="flex flex-wrap gap-3 text-xs text-gray-500">
+      <div className="flex flex-wrap gap-3 text-xs text-zinc-500">
         <span className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-full bg-green-400 inline-block"></span>
+          <span className="w-3 h-3 rounded-full bg-green-500 inline-block"></span>
           Ingepakt
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-full bg-yellow-400 inline-block"></span>
+          <span className="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
           Toegewezen
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-full bg-gray-300 inline-block"></span>
+          <span className="w-3 h-3 rounded-full bg-zinc-600 inline-block"></span>
           Niet toegewezen
         </span>
       </div>

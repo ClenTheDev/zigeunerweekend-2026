@@ -11,30 +11,33 @@ interface PanelProps {
 
 const DAYS = ['Vrijdag', 'Zaterdag', 'Zondag'] as const;
 
-const DAY_CONFIG: Record<string, { gradient: string; badge: string; dot: string; header: string }> = {
+const DAY_CONFIG: Record<string, { bg: string; badge: string; dot: string; header: string; border: string }> = {
   Vrijdag: {
-    gradient: 'from-blue-50 to-indigo-50',
-    badge:    'bg-blue-100 text-blue-700 border-blue-200',
-    dot:      'bg-blue-500',
-    header:   'text-blue-700',
+    bg:     'bg-zinc-900',
+    badge:  'bg-blue-500/20 text-blue-400 border-blue-500/30',
+    dot:    'bg-amber-500',
+    header: 'text-blue-400',
+    border: 'border-blue-500/30',
   },
   Zaterdag: {
-    gradient: 'from-orange-50 to-amber-50',
-    badge:    'bg-orange-100 text-orange-700 border-orange-200',
-    dot:      'bg-orange-500',
-    header:   'text-orange-700',
+    bg:     'bg-zinc-900',
+    badge:  'bg-amber-500/20 text-amber-400 border-amber-500/30',
+    dot:    'bg-amber-500',
+    header: 'text-amber-400',
+    border: 'border-amber-500/30',
   },
   Zondag: {
-    gradient: 'from-green-50 to-emerald-50',
-    badge:    'bg-green-100 text-green-700 border-green-200',
-    dot:      'bg-green-500',
-    header:   'text-green-700',
+    bg:     'bg-zinc-900',
+    badge:  'bg-green-500/20 text-green-400 border-green-500/30',
+    dot:    'bg-amber-500',
+    header: 'text-green-400',
+    border: 'border-green-500/30',
   },
 };
 
 const DAY_EMOJI: Record<string, string> = {
   Vrijdag:  '🌆',
-  Zaterdag: '☀️',
+  Zaterdag: '🍺',
   Zondag:   '🌅',
 };
 
@@ -97,20 +100,20 @@ export default function SchedulePanel({ data, currentUser }: PanelProps) {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-800">📅 Planning</h2>
-          <p className="text-sm text-gray-500 mt-0.5">
+          <h2 className="text-2xl font-bold text-white">📅 Planning</h2>
+          <p className="text-sm text-zinc-400 mt-0.5">
             Het programma voor het weekend
           </p>
         </div>
         {totalItems > 0 && (
-          <div className="bg-indigo-100 text-indigo-700 text-sm font-semibold px-3 py-1.5 rounded-full">
+          <div className="bg-amber-500/20 text-amber-400 text-sm font-bold px-3 py-1.5 rounded-full border border-amber-500/30">
             {totalItems} activiteit{totalItems !== 1 ? 'en' : ''}
           </div>
         )}
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm">
+        <div className="bg-red-900/40 border border-red-700 text-red-400 rounded-xl px-4 py-3 text-sm">
           {error}
         </div>
       )}
@@ -118,9 +121,9 @@ export default function SchedulePanel({ data, currentUser }: PanelProps) {
       {/* Add form */}
       <form
         onSubmit={handleAdd}
-        className="bg-white rounded-xl shadow-md border border-gray-100 p-5 space-y-4"
+        className="bg-zinc-900 rounded-xl border border-zinc-800 p-5 space-y-4"
       >
-        <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide">
+        <h3 className="font-bold text-zinc-300 text-sm uppercase tracking-widest">
           Activiteit toevoegen
         </h3>
 
@@ -130,8 +133,8 @@ export default function SchedulePanel({ data, currentUser }: PanelProps) {
             value={selectedDay}
             onChange={(e) => setSelectedDay(e.target.value)}
             className="
-              rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm
-              text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-400
+              rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm
+              text-white focus:outline-none focus:ring-2 focus:ring-amber-500
               focus:border-transparent transition
             "
           >
@@ -146,8 +149,8 @@ export default function SchedulePanel({ data, currentUser }: PanelProps) {
             value={time}
             onChange={(e) => setTime(e.target.value)}
             className="
-              rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm
-              text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-400
+              rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm
+              text-white focus:outline-none focus:ring-2 focus:ring-amber-500
               focus:border-transparent transition
             "
           />
@@ -160,9 +163,9 @@ export default function SchedulePanel({ data, currentUser }: PanelProps) {
             placeholder="Wat gaan jullie doen?"
             maxLength={150}
             className="
-              sm:col-span-3 rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm
-              text-gray-700 placeholder:text-gray-400 focus:outline-none
-              focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition
+              sm:col-span-3 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-sm
+              text-white placeholder:text-zinc-500 focus:outline-none
+              focus:ring-2 focus:ring-amber-500 focus:border-transparent transition
             "
           />
         </div>
@@ -176,8 +179,8 @@ export default function SchedulePanel({ data, currentUser }: PanelProps) {
           type="submit"
           disabled={submitting || !activity.trim() || !time}
           className="
-            bg-indigo-600 text-white text-sm font-semibold rounded-lg
-            px-5 py-2.5 hover:bg-indigo-700 active:bg-indigo-800
+            bg-amber-600 text-black text-sm font-bold rounded-lg
+            px-5 py-2.5 hover:bg-amber-500 active:bg-amber-700
             disabled:opacity-50 disabled:cursor-not-allowed transition-colors
           "
         >
@@ -194,16 +197,16 @@ export default function SchedulePanel({ data, currentUser }: PanelProps) {
           return (
             <div
               key={day}
-              className={`bg-gradient-to-b ${config.gradient} rounded-2xl border border-white shadow-sm overflow-hidden`}
+              className={`${config.bg} rounded-2xl border-2 ${config.border} overflow-hidden`}
             >
               {/* Day header */}
-              <div className="px-5 py-4 border-b border-white/60">
+              <div className="px-5 py-4 border-b border-zinc-800">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="text-2xl">{DAY_EMOJI[day]}</span>
                     <h3 className={`font-bold text-lg ${config.header}`}>{day}</h3>
                   </div>
-                  <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${config.badge}`}>
+                  <span className={`text-xs font-bold px-2 py-0.5 rounded-full border ${config.badge}`}>
                     {items.length} {items.length === 1 ? 'item' : 'items'}
                   </span>
                 </div>
@@ -212,14 +215,14 @@ export default function SchedulePanel({ data, currentUser }: PanelProps) {
               {/* Timeline */}
               <div className="px-4 py-4 space-y-1 min-h-32">
                 {items.length === 0 ? (
-                  <div className="text-center py-8 text-gray-400">
-                    <p className="text-3xl mb-2">📋</p>
+                  <div className="text-center py-8 text-zinc-600">
+                    <p className="text-3xl mb-2">🍺</p>
                     <p className="text-sm">Nog niets gepland</p>
                   </div>
                 ) : (
                   <div className="relative">
                     {/* Timeline line */}
-                    <div className="absolute left-[26px] top-2 bottom-2 w-0.5 bg-white/70 rounded-full" />
+                    <div className="absolute left-[26px] top-2 bottom-2 w-0.5 bg-zinc-700 rounded-full" />
 
                     <div className="space-y-3">
                       {items.map((item: ScheduleItem, index) => {
@@ -232,7 +235,7 @@ export default function SchedulePanel({ data, currentUser }: PanelProps) {
                             {/* Time dot */}
                             <div className="flex-shrink-0 flex flex-col items-center">
                               <div className={`
-                                w-[14px] h-[14px] rounded-full border-2 border-white shadow-sm mt-1
+                                w-[14px] h-[14px] rounded-full border-2 border-zinc-900 shadow-sm mt-1
                                 ${config.dot}
                                 ${isFirst ? 'w-4 h-4' : ''}
                               `} />
@@ -240,9 +243,9 @@ export default function SchedulePanel({ data, currentUser }: PanelProps) {
 
                             {/* Card */}
                             <div className="
-                              flex-1 bg-white rounded-xl shadow-sm px-3.5 py-2.5
-                              border border-white hover:shadow-md transition-shadow duration-200
-                              min-w-0
+                              flex-1 bg-zinc-800 rounded-xl px-3.5 py-2.5
+                              border border-zinc-700 hover:bg-zinc-750 hover:border-zinc-600
+                              transition-all duration-200 min-w-0
                             ">
                               <div className="flex items-start justify-between gap-2">
                                 <div className="min-w-0">
@@ -251,10 +254,10 @@ export default function SchedulePanel({ data, currentUser }: PanelProps) {
                                       {formatTime(item.time)}
                                     </span>
                                   </div>
-                                  <p className="text-sm font-medium text-gray-800 mt-0.5 leading-snug break-words">
+                                  <p className="text-sm font-medium text-white mt-0.5 leading-snug break-words">
                                     {item.activity}
                                   </p>
-                                  <p className="text-xs text-gray-400 mt-0.5">
+                                  <p className="text-xs text-zinc-500 mt-0.5">
                                     door {item.addedBy}
                                   </p>
                                 </div>
@@ -264,7 +267,7 @@ export default function SchedulePanel({ data, currentUser }: PanelProps) {
                                     disabled={isDeleting}
                                     aria-label="Verwijderen"
                                     className="
-                                      flex-shrink-0 text-gray-300 hover:text-red-400
+                                      flex-shrink-0 text-zinc-600 hover:text-red-400
                                       transition-colors duration-150 disabled:opacity-50
                                       text-base leading-none
                                     "
@@ -294,11 +297,11 @@ export default function SchedulePanel({ data, currentUser }: PanelProps) {
           return (
             <div
               key={day}
-              className={`flex-1 text-center rounded-xl py-2 border ${config.badge}`}
+              className={`flex-1 text-center rounded-xl py-2 border bg-zinc-900 ${config.border}`}
             >
               <div className="text-lg">{DAY_EMOJI[day]}</div>
-              <div className="text-xs font-bold mt-0.5">{day}</div>
-              <div className="text-xs opacity-70">{count} items</div>
+              <div className={`text-xs font-bold mt-0.5 ${config.header}`}>{day}</div>
+              <div className="text-xs text-zinc-500">{count} items</div>
             </div>
           );
         })}

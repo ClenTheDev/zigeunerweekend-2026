@@ -81,14 +81,14 @@ export default function ActivitiesPanel({ data, currentUser }: PanelProps) {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold text-gray-800">🎯 Activiteiten</h2>
-        <p className="text-sm text-gray-500 mt-0.5">
+        <h2 className="text-2xl font-bold text-white">🎯 Activiteiten</h2>
+        <p className="text-sm text-zinc-400 mt-0.5">
           Stel activiteiten voor en stem op jouw favorieten!
         </p>
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm">
+        <div className="bg-red-900/40 border border-red-700 text-red-400 rounded-xl px-4 py-3 text-sm">
           {error}
         </div>
       )}
@@ -96,9 +96,9 @@ export default function ActivitiesPanel({ data, currentUser }: PanelProps) {
       {/* Propose form */}
       <form
         onSubmit={handlePropose}
-        className="bg-white rounded-xl shadow-md border border-gray-100 p-5 space-y-4"
+        className="bg-zinc-900 rounded-xl border border-zinc-800 p-5 space-y-4"
       >
-        <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide">
+        <h3 className="font-bold text-zinc-300 text-sm uppercase tracking-widest">
           Activiteit voorstellen
         </h3>
 
@@ -109,9 +109,9 @@ export default function ActivitiesPanel({ data, currentUser }: PanelProps) {
           placeholder="Naam van de activiteit..."
           maxLength={100}
           className="
-            w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm
-            text-gray-700 placeholder:text-gray-400 focus:outline-none
-            focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition
+            w-full rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-sm
+            text-white placeholder:text-zinc-500 focus:outline-none
+            focus:ring-2 focus:ring-amber-500 focus:border-transparent transition
           "
         />
 
@@ -122,9 +122,9 @@ export default function ActivitiesPanel({ data, currentUser }: PanelProps) {
           maxLength={300}
           rows={2}
           className="
-            w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm
-            text-gray-700 placeholder:text-gray-400 focus:outline-none
-            focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition resize-none
+            w-full rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-sm
+            text-white placeholder:text-zinc-500 focus:outline-none
+            focus:ring-2 focus:ring-amber-500 focus:border-transparent transition resize-none
           "
         />
 
@@ -132,8 +132,8 @@ export default function ActivitiesPanel({ data, currentUser }: PanelProps) {
           type="submit"
           disabled={submitting || !title.trim()}
           className="
-            bg-indigo-600 text-white text-sm font-semibold rounded-lg
-            px-5 py-2.5 hover:bg-indigo-700 active:bg-indigo-800
+            bg-amber-600 text-black text-sm font-bold rounded-lg
+            px-5 py-2.5 hover:bg-amber-500 active:bg-amber-700
             disabled:opacity-50 disabled:cursor-not-allowed transition-colors
           "
         >
@@ -143,9 +143,9 @@ export default function ActivitiesPanel({ data, currentUser }: PanelProps) {
 
       {/* Activities list */}
       {sorted.length === 0 ? (
-        <div className="text-center py-14 text-gray-400">
+        <div className="text-center py-14 text-zinc-500">
           <div className="text-5xl mb-3">🎯</div>
-          <p className="font-medium text-lg">Nog geen activiteiten voorgesteld</p>
+          <p className="font-medium text-lg text-zinc-300">Nog geen activiteiten voorgesteld</p>
           <p className="text-sm mt-1">Wees de eerste en stel iets leuks voor!</p>
         </div>
       ) : (
@@ -161,9 +161,12 @@ export default function ActivitiesPanel({ data, currentUser }: PanelProps) {
               <div
                 key={activity.id}
                 className={`
-                  bg-white rounded-xl border-2 shadow-sm p-5
-                  hover:shadow-lg transition-all duration-200
-                  ${isTopActivity ? 'border-yellow-300' : 'border-gray-100'}
+                  bg-zinc-900 rounded-xl border-2 p-5
+                  hover:bg-zinc-800 transition-all duration-200
+                  ${isTopActivity
+                    ? 'border-amber-500 shadow-[0_0_20px_rgba(245,158,11,0.12)]'
+                    : 'border-zinc-800 hover:border-zinc-700'
+                  }
                 `}
               >
                 <div className="flex items-start gap-4">
@@ -177,13 +180,13 @@ export default function ActivitiesPanel({ data, currentUser }: PanelProps) {
                       transition-all duration-200 font-bold text-xl
                       disabled:opacity-60 disabled:cursor-not-allowed
                       ${hasVoted
-                        ? 'bg-rose-100 text-rose-500 border-2 border-rose-300 hover:bg-rose-200'
-                        : 'bg-gray-100 text-gray-400 border-2 border-gray-200 hover:bg-gray-200 hover:text-gray-600'
+                        ? 'bg-amber-500/20 text-amber-400 border-2 border-amber-500 hover:bg-amber-500/30'
+                        : 'bg-zinc-800 text-zinc-500 border-2 border-zinc-700 hover:bg-zinc-700 hover:text-zinc-300'
                       }
                     `}
                     aria-label={hasVoted ? 'Stem verwijderen' : 'Stem toevoegen'}
                   >
-                    <span>{isVoting ? '⏳' : hasVoted ? '❤️' : '🤍'}</span>
+                    <span>{isVoting ? '⏳' : hasVoted ? '🔥' : '🤍'}</span>
                     <span className="text-sm mt-0.5">{activity.votes.length}</span>
                   </button>
 
@@ -192,11 +195,11 @@ export default function ActivitiesPanel({ data, currentUser }: PanelProps) {
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2 flex-wrap">
                         {isTopActivity && (
-                          <span className="text-xs font-bold text-yellow-600 bg-yellow-100 px-2 py-0.5 rounded-full">
-                            🏆 Favoriet
+                          <span className="text-xs font-bold text-black bg-amber-500 px-2 py-0.5 rounded-full">
+                            🔥 Favoriet
                           </span>
                         )}
-                        <h3 className="font-bold text-gray-800 text-base">
+                        <h3 className="font-bold text-white text-base">
                           {activity.title}
                         </h3>
                       </div>
@@ -207,7 +210,7 @@ export default function ActivitiesPanel({ data, currentUser }: PanelProps) {
                           disabled={isDeleting}
                           aria-label="Activiteit verwijderen"
                           className="
-                            flex-shrink-0 text-gray-300 hover:text-red-400
+                            flex-shrink-0 text-zinc-600 hover:text-red-400
                             transition-colors duration-150 disabled:opacity-50
                             disabled:cursor-not-allowed text-lg leading-none
                           "
@@ -218,18 +221,18 @@ export default function ActivitiesPanel({ data, currentUser }: PanelProps) {
                     </div>
 
                     {activity.description && (
-                      <p className="text-sm text-gray-500 mt-1 leading-relaxed">
+                      <p className="text-sm text-zinc-400 mt-1 leading-relaxed">
                         {activity.description}
                       </p>
                     )}
 
-                    <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-400">
-                      <span>Voorgesteld door <strong className="text-gray-600">{activity.participantName}</strong></span>
+                    <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-zinc-500">
+                      <span>Voorgesteld door <strong className="text-zinc-300">{activity.participantName}</strong></span>
 
                       {activity.votes.length > 0 && (
                         <span className="flex items-center gap-1">
                           &#x2022; Gestemd door{' '}
-                          <span className="text-gray-600 font-medium">
+                          <span className="text-zinc-300 font-medium">
                             {activity.votes
                               .map((id) => getParticipantName(id))
                               .join(', ')}

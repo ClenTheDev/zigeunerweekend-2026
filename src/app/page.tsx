@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useWeekendData, postData } from '@/lib/hooks';
 
-const AVATARS = ['🎉', '🍕', '🎸', '🏄', '🎲', '🍻', '🎯', '🌮', '🎪', '🏕️', '🎨', '🚀'];
+// Party-themed avatars — no cute stuff
+const AVATARS = ['🍺', '🎸', '🔥', '🎪', '🎶', '🏕️', '🎲', '🃏', '🥃', '🍻', '🎯', '🚀'];
 
 const LOCAL_STORAGE_KEY = 'vriendenweekend_participant';
 
@@ -28,16 +29,45 @@ function useCountdown(target: Date) {
   return { days, hours, minutes, seconds, passed: false };
 }
 
+// Reusable glow blobs for the dark background atmosphere
+function GlowBlobs() {
+  return (
+    <>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed top-[-120px] right-[-100px] w-[500px] h-[500px] rounded-full opacity-20"
+        style={{ background: 'radial-gradient(circle, #d97706 0%, transparent 65%)' }}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed bottom-[-100px] left-[-80px] w-[400px] h-[400px] rounded-full opacity-15"
+        style={{ background: 'radial-gradient(circle, #b45309 0%, transparent 65%)' }}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full opacity-5"
+        style={{ background: 'radial-gradient(ellipse, #fbbf24 0%, transparent 70%)' }}
+      />
+    </>
+  );
+}
+
 export default function LandingPage() {
   const router = useRouter();
   const { data, isLoading } = useWeekendData();
   const countdown = useCountdown(WEEKEND_START);
 
   const [name, setName] = useState('');
-  const [selectedEmoji, setSelectedEmoji] = useState('🎉');
+  const [email, setEmail] = useState('');
+  const [selectedEmoji, setSelectedEmoji] = useState('🍺');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
-  const [existingUser, setExistingUser] = useState<{ id: string; name: string; emoji: string } | null>(null);
+  const [existingUser, setExistingUser] = useState<{
+    id: string;
+    name: string;
+    email: string;
+    emoji: string;
+  } | null>(null);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
@@ -45,7 +75,7 @@ export default function LandingPage() {
       const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
-        if (parsed?.id && parsed?.name) {
+        if (parsed?.id && parsed?.name && parsed?.email) {
           setExistingUser(parsed);
         }
       }
@@ -57,112 +87,182 @@ export default function LandingPage() {
 
   async function handleJoin(e: React.FormEvent) {
     e.preventDefault();
-    const trimmed = name.trim();
-    if (!trimmed) {
-      setError('Vul je naam in om mee te doen!');
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim().toLowerCase();
+
+    if (!trimmedName) {
+      setError('Je naam invullen, broer. Kan niet zonder.');
       return;
     }
+    if (!trimmedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      setError('Een geldig e-mailadres is vereist.');
+      return;
+    }
+
     setError('');
     setIsSubmitting(true);
+
     try {
       const result = await postData('/api/participants', {
-        name: trimmed,
+        name: trimmedName,
+        email: trimmedEmail,
         emoji: selectedEmoji,
       });
-      localStorage.setItem(
-        LOCAL_STORAGE_KEY,
-        JSON.stringify({ id: result.id, name: trimmed, emoji: selectedEmoji })
-      );
+      const stored = {
+        id: result.id,
+        name: result.name,
+        email: result.email,
+        emoji: result.emoji,
+      };
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(stored));
       router.push('/weekend');
     } catch {
-      setError('Er ging iets mis. Probeer het opnieuw!');
+      setError('Server liegt. Probeer het nog eens.');
       setIsSubmitting(false);
     }
   }
 
   if (!hydrated) return null;
 
-  // --- Returning user ---
+  // -------------------------------------------------------------------------
+  // RETURNING USER — welcome back screen
+  // -------------------------------------------------------------------------
   if (existingUser) {
     return (
-      <main className="bg-hero min-h-dvh flex flex-col items-center justify-center p-4">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none fixed top-[-80px] right-[-80px] w-72 h-72 rounded-full opacity-30"
-          style={{ background: 'radial-gradient(circle, #f97316 0%, transparent 70%)' }}
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none fixed bottom-[-60px] left-[-60px] w-64 h-64 rounded-full opacity-20"
-          style={{ background: 'radial-gradient(circle, #d946ef 0%, transparent 70%)' }}
-        />
+      <main
+        className="min-h-dvh flex flex-col items-center justify-center p-4 py-12"
+        style={{ background: '#0a0a0a' }}
+      >
+        <GlowBlobs />
 
-        <div className="w-full max-w-md space-y-6">
-          <div className="text-center">
-            <div className="text-6xl mb-3 animate-bounce">{existingUser.emoji}</div>
-            <h1 className="text-4xl font-extrabold tracking-tight mb-2">
-              <span className="text-gradient">Welkom terug!</span>
+        <div className="relative w-full max-w-md space-y-5 z-10">
+          {/* Welcome back hero */}
+          <div className="text-center space-y-3">
+            <div
+              className="text-7xl mb-2 inline-block"
+              style={{ filter: 'drop-shadow(0 0 20px rgba(217,119,6,0.8))' }}
+            >
+              {existingUser.emoji}
+            </div>
+            <h1 className="text-4xl font-black uppercase tracking-tight text-white">
+              Welkom terug,{' '}
+              <span
+                style={{
+                  background: 'linear-gradient(90deg, #f59e0b, #fbbf24)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}
+              >
+                {existingUser.name}
+              </span>
             </h1>
-            <p className="text-xl text-stone-600 font-medium">
-              Hoi{' '}
-              <span className="font-bold text-orange-600">{existingUser.name}</span>
-              , fijn dat je er bent! 👋
+            <p className="text-zinc-400 text-lg font-medium tracking-wide">
+              Je staat op de lijst. 🤘
             </p>
           </div>
 
           {/* Countdown */}
           {!countdown.passed && (
-            <div className="bg-white/80 backdrop-blur rounded-2xl border border-orange-100 shadow-lg p-5 text-center">
-              <p className="text-sm font-semibold text-stone-500 mb-3 uppercase tracking-wide">Nog even wachten...</p>
-              <div className="grid grid-cols-4 gap-3">
+            <div
+              className="rounded-2xl border p-5 text-center"
+              style={{
+                background: 'rgba(255,255,255,0.03)',
+                borderColor: 'rgba(217,119,6,0.3)',
+                backdropFilter: 'blur(12px)',
+              }}
+            >
+              <p className="text-xs font-bold text-amber-500 mb-4 uppercase tracking-[0.2em]">
+                T-minus
+              </p>
+              <div className="grid grid-cols-4 gap-2">
                 {[
-                  { value: countdown.days, label: 'dagen' },
-                  { value: countdown.hours, label: 'uur' },
-                  { value: countdown.minutes, label: 'min' },
-                  { value: countdown.seconds, label: 'sec' },
+                  { value: countdown.days, label: 'DAGEN' },
+                  { value: countdown.hours, label: 'UUR' },
+                  { value: countdown.minutes, label: 'MIN' },
+                  { value: countdown.seconds, label: 'SEC' },
                 ].map((unit) => (
-                  <div key={unit.label} className="bg-gradient-to-b from-orange-50 to-amber-50 rounded-xl p-3 border border-orange-100">
-                    <div className="text-3xl font-black text-orange-600 tabular-nums">
+                  <div
+                    key={unit.label}
+                    className="rounded-xl p-3"
+                    style={{
+                      background: 'rgba(217,119,6,0.08)',
+                      border: '1px solid rgba(217,119,6,0.25)',
+                    }}
+                  >
+                    <div
+                      className="text-3xl font-black tabular-nums"
+                      style={{
+                        color: '#fbbf24',
+                        textShadow: '0 0 16px rgba(251,191,36,0.5)',
+                      }}
+                    >
                       {String(unit.value).padStart(2, '0')}
                     </div>
-                    <div className="text-xs text-stone-500 font-medium mt-0.5">{unit.label}</div>
+                    <div className="text-[10px] font-bold text-zinc-500 mt-0.5 tracking-widest">
+                      {unit.label}
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          <div className="card shadow-lg text-center">
+          {/* CTA card */}
+          <div
+            className="rounded-2xl border p-5 text-center space-y-3"
+            style={{
+              background: 'rgba(255,255,255,0.03)',
+              borderColor: 'rgba(217,119,6,0.25)',
+            }}
+          >
             <button
               onClick={() => router.push('/weekend')}
-              className="btn btn-primary w-full text-lg py-3"
+              className="w-full py-3.5 rounded-xl font-black text-base uppercase tracking-widest text-black transition-all duration-150 active:scale-95"
+              style={{
+                background: 'linear-gradient(90deg, #d97706, #f59e0b, #fbbf24)',
+                boxShadow: '0 0 24px rgba(217,119,6,0.5)',
+              }}
             >
-              Naar het weekend! 🎉
+              Naar het weekend 🔥
             </button>
             <button
               onClick={() => {
                 localStorage.removeItem(LOCAL_STORAGE_KEY);
                 setExistingUser(null);
               }}
-              className="mt-3 text-sm text-stone-400 hover:text-stone-600 transition-colors underline underline-offset-2 cursor-pointer"
+              className="text-xs text-zinc-600 hover:text-zinc-400 transition-colors underline underline-offset-2 cursor-pointer"
             >
-              Andere deelnemer? Opnieuw aanmelden
+              Ander account? Opnieuw aanmelden
             </button>
           </div>
 
+          {/* Participants */}
           {!isLoading && data.participants.length > 0 && (
-            <div className="mt-4">
-              <p className="text-center text-stone-500 text-sm font-medium mb-3">
-                Al aangemeld ({data.participants.length})
+            <div>
+              <div
+                className="h-px w-full mb-4"
+                style={{
+                  background:
+                    'linear-gradient(90deg, transparent, rgba(217,119,6,0.4), transparent)',
+                }}
+              />
+              <p className="text-center text-zinc-500 text-xs font-bold mb-3 uppercase tracking-[0.15em]">
+                Al op de lijst ({data.participants.length})
               </p>
               <div className="flex flex-wrap justify-center gap-2">
                 {data.participants.map((p) => (
                   <span
                     key={p.id}
-                    className="inline-flex items-center gap-1.5 bg-white border border-orange-100 rounded-full px-3 py-1 text-sm font-medium shadow-sm"
+                    className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold"
+                    style={{
+                      background: 'rgba(217,119,6,0.1)',
+                      border: '1px solid rgba(217,119,6,0.25)',
+                      color: '#d4d4d8',
+                    }}
                   >
                     <span>{p.emoji}</span>
-                    <span className="text-stone-700">{p.name}</span>
+                    <span>{p.name}</span>
                   </span>
                 ))}
               </div>
@@ -173,113 +273,301 @@ export default function LandingPage() {
     );
   }
 
-  // --- New user / join ---
+  // -------------------------------------------------------------------------
+  // NEW USER — join / landing page
+  // -------------------------------------------------------------------------
   return (
-    <main className="bg-hero min-h-dvh flex flex-col items-center justify-center p-4 py-12">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none fixed top-[-80px] right-[-80px] w-80 h-80 rounded-full opacity-25"
-        style={{ background: 'radial-gradient(circle, #f97316 0%, transparent 70%)' }}
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none fixed bottom-[-80px] left-[-80px] w-72 h-72 rounded-full opacity-20"
-        style={{ background: 'radial-gradient(circle, #d946ef 0%, transparent 70%)' }}
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none fixed top-1/2 left-[-40px] w-48 h-48 rounded-full opacity-15"
-        style={{ background: 'radial-gradient(circle, #fbbf24 0%, transparent 70%)' }}
-      />
+    <main
+      className="min-h-dvh flex flex-col items-center justify-center p-4 py-14"
+      style={{ background: '#0a0a0a' }}
+    >
+      <GlowBlobs />
 
-      <div className="w-full max-w-lg space-y-6">
-        {/* Hero */}
-        <div className="text-center">
-          <div className="text-6xl mb-4">🏕️</div>
-          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-2 text-balance">
-            <span className="text-gradient">Het Zigeunerweekend</span>
+      <div className="relative w-full max-w-lg space-y-6 z-10">
+
+        {/* ---- HERO ---- */}
+        <div className="text-center space-y-2">
+          {/* Decorative top label */}
+          <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-2"
+            style={{
+              background: 'rgba(217,119,6,0.12)',
+              border: '1px solid rgba(217,119,6,0.35)',
+            }}
+          >
+            <span className="text-amber-500 text-xs font-bold uppercase tracking-[0.2em]">
+              Officieel Evenement
+            </span>
+            <span className="text-amber-400">🍺</span>
+          </div>
+
+          {/* Main title */}
+          <h1
+            className="text-5xl sm:text-6xl font-black uppercase leading-none tracking-tight"
+            style={{
+              background: 'linear-gradient(160deg, #ffffff 0%, #fbbf24 50%, #d97706 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              textShadow: 'none',
+              filter: 'drop-shadow(0 0 30px rgba(217,119,6,0.4))',
+            }}
+          >
+            HET ZIGEUNER
+            <br />
+            WEEKEND
           </h1>
-          <p className="text-2xl font-bold text-orange-600 mb-3">2026</p>
-          <p className="text-stone-500 text-lg font-medium text-balance">
-            6 t/m 8 maart &bull; Resort Arcen
-          </p>
+
+          {/* Year badge */}
+          <div
+            className="inline-block text-6xl font-black tracking-tighter mt-1"
+            style={{
+              color: '#f59e0b',
+              textShadow: '0 0 40px rgba(245,158,11,0.7), 0 0 80px rgba(245,158,11,0.3)',
+            }}
+          >
+            2026
+          </div>
+
+          {/* Date & location */}
+          <div className="flex flex-col items-center gap-1.5 mt-3">
+            <p
+              className="text-2xl font-black uppercase tracking-widest"
+              style={{ color: '#e5e5e5' }}
+            >
+              6 T/M 8 MAART
+            </p>
+            <a
+              href="https://www.roompot.nl/parken/resort-arcen/accommodaties/wellness-zwembadvilla-8"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold transition-colors"
+              style={{ color: '#a3a3a3' }}
+              onMouseOver={(e) => (e.currentTarget.style.color = '#fbbf24')}
+              onMouseOut={(e) => (e.currentTarget.style.color = '#a3a3a3')}
+            >
+              <span>🏕️</span>
+              <span className="underline underline-offset-4">Resort Arcen</span>
+              <span className="no-underline text-zinc-600">→</span>
+            </a>
+          </div>
+
+          {/* Vibe strip */}
+          <div
+            className="flex justify-center gap-3 text-xl mt-3 pt-3"
+            style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}
+            aria-hidden="true"
+          >
+            {['🍺', '🎸', '🔥', '🎶', '🎪', '🥃', '🎯'].map((e) => (
+              <span
+                key={e}
+                className="opacity-60 hover:opacity-100 transition-opacity"
+              >
+                {e}
+              </span>
+            ))}
+          </div>
         </div>
 
-        {/* Countdown */}
+        {/* ---- COUNTDOWN ---- */}
         {!countdown.passed && (
-          <div className="bg-white/80 backdrop-blur rounded-2xl border border-orange-100 shadow-lg p-5 text-center">
-            <p className="text-sm font-semibold text-stone-500 mb-3 uppercase tracking-wide">Countdown</p>
-            <div className="grid grid-cols-4 gap-3">
+          <div
+            className="rounded-2xl border p-5"
+            style={{
+              background: 'rgba(255,255,255,0.02)',
+              borderColor: 'rgba(217,119,6,0.3)',
+              backdropFilter: 'blur(8px)',
+            }}
+          >
+            <p className="text-xs font-bold text-amber-500 mb-4 text-center uppercase tracking-[0.2em]">
+              Countdown 🔥
+            </p>
+            <div className="grid grid-cols-4 gap-2">
               {[
-                { value: countdown.days, label: 'dagen' },
-                { value: countdown.hours, label: 'uur' },
-                { value: countdown.minutes, label: 'min' },
-                { value: countdown.seconds, label: 'sec' },
+                { value: countdown.days, label: 'DAGEN' },
+                { value: countdown.hours, label: 'UUR' },
+                { value: countdown.minutes, label: 'MIN' },
+                { value: countdown.seconds, label: 'SEC' },
               ].map((unit) => (
-                <div key={unit.label} className="bg-gradient-to-b from-orange-50 to-amber-50 rounded-xl p-3 border border-orange-100">
-                  <div className="text-3xl font-black text-orange-600 tabular-nums">
+                <div
+                  key={unit.label}
+                  className="rounded-xl p-3 text-center"
+                  style={{
+                    background: 'rgba(217,119,6,0.07)',
+                    border: '1px solid rgba(217,119,6,0.2)',
+                  }}
+                >
+                  <div
+                    className="text-4xl font-black tabular-nums leading-none"
+                    style={{
+                      color: '#fbbf24',
+                      textShadow: '0 0 20px rgba(251,191,36,0.55)',
+                    }}
+                  >
                     {String(unit.value).padStart(2, '0')}
                   </div>
-                  <div className="text-xs text-stone-500 font-medium mt-0.5">{unit.label}</div>
+                  <div className="text-[10px] font-bold text-zinc-600 mt-1.5 tracking-widest">
+                    {unit.label}
+                  </div>
                 </div>
               ))}
             </div>
           </div>
         )}
 
-        {/* Accommodation card */}
+        {/* ---- ACCOMMODATION ---- */}
         <a
           href="https://www.roompot.nl/parken/resort-arcen/accommodaties/wellness-zwembadvilla-8"
           target="_blank"
           rel="noopener noreferrer"
-          className="block bg-white/90 backdrop-blur rounded-2xl border border-orange-100 shadow-md p-4 hover:shadow-lg transition-shadow group"
+          className="group block rounded-2xl border p-4 transition-all duration-200"
+          style={{
+            background: 'rgba(255,255,255,0.02)',
+            borderColor: 'rgba(217,119,6,0.2)',
+          }}
+          onMouseOver={(e) => {
+            (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(217,119,6,0.5)';
+            (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(217,119,6,0.06)';
+          }}
+          onMouseOut={(e) => {
+            (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(217,119,6,0.2)';
+            (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,255,255,0.02)';
+          }}
         >
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
+            <div
+              className="w-11 h-11 rounded-xl flex items-center justify-center text-2xl flex-shrink-0"
+              style={{ background: 'rgba(217,119,6,0.1)' }}
+            >
               🏡
             </div>
-            <div className="min-w-0">
-              <p className="font-bold text-stone-800 text-sm group-hover:text-orange-600 transition-colors">
+            <div className="min-w-0 flex-1">
+              <p className="font-bold text-white text-sm">
                 Wellness Zwembadvilla 8
               </p>
-              <p className="text-xs text-stone-500">Roompot Resort Arcen</p>
-              <p className="text-xs text-orange-500 font-medium mt-0.5">Bekijk de accommodatie &rarr;</p>
+              <p className="text-xs text-zinc-500 mt-0.5">Roompot Resort Arcen</p>
             </div>
+            <span
+              className="text-xs font-bold uppercase tracking-widest flex-shrink-0"
+              style={{ color: '#d97706' }}
+            >
+              Bekijk →
+            </span>
           </div>
         </a>
 
-        {/* Join card */}
-        <div className="card shadow-xl">
-          <h2 className="text-xl font-bold text-stone-800 mb-5">
-            Doe je mee? Meld je aan! 👇
+        {/* ---- JOIN FORM ---- */}
+        <div
+          className="rounded-2xl border p-6"
+          style={{
+            background: 'rgba(255,255,255,0.03)',
+            borderColor: 'rgba(217,119,6,0.3)',
+          }}
+        >
+          <h2
+            className="text-xl font-black uppercase tracking-widest mb-1"
+            style={{ color: '#fbbf24' }}
+          >
+            Ben jij erbij?
           </h2>
+          <p className="text-zinc-500 text-sm mb-6 font-medium">
+            Meld je aan en sta op de lijst.
+          </p>
 
-          <form onSubmit={handleJoin} noValidate>
-            <div className="mb-5">
-              <label htmlFor="name-input" className="block text-sm font-semibold text-stone-700 mb-1.5">
-                Jouw naam
+          <form onSubmit={handleJoin} noValidate className="space-y-4">
+            {/* Name field */}
+            <div>
+              <label
+                htmlFor="name-input"
+                className="block text-xs font-bold text-zinc-400 mb-1.5 uppercase tracking-widest"
+              >
+                Naam
               </label>
               <input
                 id="name-input"
                 type="text"
                 value={name}
-                onChange={(e) => { setName(e.target.value); setError(''); }}
-                placeholder="Bijv. Sanne, Tim, ..."
+                onChange={(e) => {
+                  setName(e.target.value);
+                  setError('');
+                }}
+                placeholder="Bijv. Tim, Joris, ..."
                 maxLength={40}
                 autoComplete="given-name"
-                className="w-full border-2 rounded-xl px-4 py-3 text-base font-medium text-stone-800 placeholder:text-stone-300 transition-colors outline-none focus:border-orange-400"
+                className="w-full rounded-xl px-4 py-3 text-base font-semibold text-white placeholder-zinc-700 outline-none transition-all duration-150"
                 style={{
-                  borderColor: error ? '#ef4444' : '#fed7aa',
-                  background: '#fff7ed',
+                  background: 'rgba(255,255,255,0.05)',
+                  border: `1.5px solid ${error && !name.trim() ? '#ef4444' : 'rgba(217,119,6,0.3)'}`,
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.border = '1.5px solid rgba(245,158,11,0.7)';
+                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(245,158,11,0.1)';
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.border = '1.5px solid rgba(217,119,6,0.3)';
+                  e.currentTarget.style.boxShadow = 'none';
                 }}
               />
-              {error && (
-                <p className="mt-1.5 text-sm text-red-500 font-medium" role="alert">{error}</p>
-              )}
             </div>
 
-            <div className="mb-6">
-              <p className="text-sm font-semibold text-stone-700 mb-2">Kies je avatar</p>
+            {/* Email field */}
+            <div>
+              <label
+                htmlFor="email-input"
+                className="block text-xs font-bold text-zinc-400 mb-1.5 uppercase tracking-widest"
+              >
+                E-mail
+              </label>
+              <input
+                id="email-input"
+                type="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setError('');
+                }}
+                placeholder="jouw@mail.nl"
+                maxLength={100}
+                autoComplete="email"
+                inputMode="email"
+                className="w-full rounded-xl px-4 py-3 text-base font-semibold text-white placeholder-zinc-700 outline-none transition-all duration-150"
+                style={{
+                  background: 'rgba(255,255,255,0.05)',
+                  border: `1.5px solid ${error && !email.trim() ? '#ef4444' : 'rgba(217,119,6,0.3)'}`,
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.border = '1.5px solid rgba(245,158,11,0.7)';
+                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(245,158,11,0.1)';
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.border = '1.5px solid rgba(217,119,6,0.3)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              />
+              <p className="mt-1 text-[11px] text-zinc-600 font-medium">
+                Wordt gebruikt als inlog — niet gedeeld.
+              </p>
+            </div>
+
+            {/* Error message */}
+            {error && (
+              <p
+                className="text-sm font-semibold px-3 py-2 rounded-lg"
+                role="alert"
+                style={{
+                  color: '#fca5a5',
+                  background: 'rgba(239,68,68,0.08)',
+                  border: '1px solid rgba(239,68,68,0.2)',
+                }}
+              >
+                {error}
+              </p>
+            )}
+
+            {/* Avatar picker */}
+            <div>
+              <p className="text-xs font-bold text-zinc-400 mb-2.5 uppercase tracking-widest">
+                Kies je avatar
+              </p>
               <div className="grid grid-cols-6 gap-2">
                 {AVATARS.map((emoji) => (
                   <button
@@ -288,18 +576,33 @@ export default function LandingPage() {
                     onClick={() => setSelectedEmoji(emoji)}
                     aria-label={`Kies avatar ${emoji}`}
                     aria-pressed={selectedEmoji === emoji}
-                    className={`
-                      relative flex items-center justify-center text-2xl h-12 w-full rounded-xl
-                      transition-all duration-150 select-none cursor-pointer border-2
-                      ${selectedEmoji === emoji
-                        ? 'bg-orange-50 border-orange-400 scale-110 shadow-md'
-                        : 'bg-stone-50 border-transparent hover:bg-orange-50'
-                      }
-                    `}
+                    className="relative flex items-center justify-center text-2xl h-12 w-full rounded-xl transition-all duration-150 select-none cursor-pointer"
+                    style={{
+                      background:
+                        selectedEmoji === emoji
+                          ? 'rgba(217,119,6,0.2)'
+                          : 'rgba(255,255,255,0.04)',
+                      border:
+                        selectedEmoji === emoji
+                          ? '2px solid rgba(245,158,11,0.7)'
+                          : '2px solid rgba(255,255,255,0.06)',
+                      boxShadow:
+                        selectedEmoji === emoji
+                          ? '0 0 12px rgba(217,119,6,0.35)'
+                          : 'none',
+                      transform: selectedEmoji === emoji ? 'scale(1.08)' : 'scale(1)',
+                      filter:
+                        selectedEmoji === emoji
+                          ? 'drop-shadow(0 0 6px rgba(251,191,36,0.6))'
+                          : 'none',
+                    }}
                   >
                     {emoji}
                     {selectedEmoji === emoji && (
-                      <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-white text-[9px] font-bold bg-orange-500">
+                      <span
+                        className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full flex items-center justify-center text-black text-[9px] font-black"
+                        style={{ background: '#f59e0b' }}
+                      >
                         ✓
                       </span>
                     )}
@@ -308,38 +611,56 @@ export default function LandingPage() {
               </div>
             </div>
 
+            {/* Submit */}
             <button
               type="submit"
               disabled={isSubmitting}
-              className="btn btn-primary w-full text-base py-3 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full py-4 rounded-xl font-black text-base uppercase tracking-widest text-black transition-all duration-150 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+              style={{
+                background: isSubmitting
+                  ? '#78716c'
+                  : 'linear-gradient(90deg, #d97706, #f59e0b, #fbbf24)',
+                boxShadow: isSubmitting ? 'none' : '0 0 28px rgba(217,119,6,0.5)',
+              }}
             >
               {isSubmitting ? (
-                <>
-                  <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <span className="inline-flex items-center gap-2">
+                  <span className="inline-block w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
                   Even wachten...
-                </>
+                </span>
               ) : (
-                <>{selectedEmoji} Meedoen aan het weekend!</>
+                <>{selectedEmoji} Ik doe mee</>
               )}
             </button>
           </form>
         </div>
 
-        {/* Who's already here */}
+        {/* ---- WHO IS COMING ---- */}
         {!isLoading && data.participants.length > 0 && (
           <div>
-            <hr className="divider" />
-            <p className="text-center text-stone-500 text-sm font-semibold mb-3 uppercase tracking-wide">
-              Al aangemeld ({data.participants.length})
+            <div
+              className="h-px w-full mb-5"
+              style={{
+                background:
+                  'linear-gradient(90deg, transparent, rgba(217,119,6,0.4), transparent)',
+              }}
+            />
+            <p className="text-center text-zinc-600 text-xs font-bold mb-3 uppercase tracking-[0.18em]">
+              Al op de lijst — {data.participants.length}
             </p>
             <div className="flex flex-wrap justify-center gap-2">
               {data.participants.map((p) => (
                 <span
                   key={p.id}
-                  className="inline-flex items-center gap-1.5 bg-white border border-orange-100 rounded-full px-3 py-1.5 text-sm font-medium shadow-sm"
+                  className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold"
+                  style={{
+                    background: 'rgba(217,119,6,0.08)',
+                    border: '1px solid rgba(217,119,6,0.2)',
+                    color: '#d4d4d8',
+                  }}
                 >
                   <span className="text-base">{p.emoji}</span>
-                  <span className="text-stone-700">{p.name}</span>
+                  <span>{p.name}</span>
                 </span>
               ))}
             </div>
@@ -347,11 +668,14 @@ export default function LandingPage() {
         )}
 
         {isLoading && (
-          <div className="text-center text-stone-400 text-sm">
-            <span className="inline-block w-4 h-4 border-2 border-orange-300 border-t-transparent rounded-full animate-spin mr-2 align-middle" />
+          <div className="text-center text-zinc-700 text-sm flex items-center justify-center gap-2">
+            <span className="inline-block w-4 h-4 border-2 border-amber-700 border-t-transparent rounded-full animate-spin" />
             Laden...
           </div>
         )}
+
+        {/* Bottom noise texture vibe */}
+        <div className="pb-4" />
       </div>
     </main>
   );

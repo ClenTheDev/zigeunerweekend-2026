@@ -40,26 +40,26 @@ export default function ParticipantsPanel({ data, currentUser }: PanelProps) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-800">Deelnemers</h2>
-          <p className="text-sm text-gray-500 mt-0.5">
+          <h2 className="text-2xl font-bold text-white">Deelnemers</h2>
+          <p className="text-sm text-zinc-400 mt-0.5">
             {participants.length} {participants.length === 1 ? 'persoon' : 'personen'} doen mee
           </p>
         </div>
-        <div className="bg-indigo-100 text-indigo-700 text-sm font-semibold px-3 py-1.5 rounded-full">
+        <div className="bg-amber-500/20 text-amber-400 text-sm font-bold px-3 py-1.5 rounded-full border border-amber-500/30">
           {participants.length} / &#x221e;
         </div>
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm">
+        <div className="bg-red-900/40 border border-red-700 text-red-400 rounded-xl px-4 py-3 text-sm">
           {error}
         </div>
       )}
 
       {participants.length === 0 ? (
-        <div className="text-center py-16 text-gray-400">
-          <div className="text-5xl mb-3">👥</div>
-          <p className="text-lg font-medium">Nog geen deelnemers</p>
+        <div className="text-center py-16 text-zinc-500">
+          <div className="text-5xl mb-3">🍺</div>
+          <p className="text-lg font-medium text-zinc-300">Nog geen deelnemers</p>
           <p className="text-sm mt-1">Log in om deel te nemen aan het weekend!</p>
         </div>
       ) : (
@@ -72,32 +72,32 @@ export default function ParticipantsPanel({ data, currentUser }: PanelProps) {
               <div
                 key={participant.id}
                 className={`
-                  relative bg-white rounded-xl shadow-md p-5 border-2 transition-all duration-200
-                  hover:shadow-lg hover:-translate-y-0.5
+                  relative bg-zinc-900 rounded-xl p-5 border-2 transition-all duration-200
+                  hover:bg-zinc-800 hover:-translate-y-0.5
                   ${isCurrentUser
-                    ? 'border-indigo-300 bg-indigo-50/40'
-                    : 'border-transparent'
+                    ? 'border-amber-500 shadow-[0_0_20px_rgba(245,158,11,0.15)]'
+                    : 'border-zinc-800 hover:border-zinc-700'
                   }
                 `}
               >
                 {isCurrentUser && (
-                  <span className="absolute top-3 right-3 bg-indigo-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                  <span className="absolute top-3 right-3 bg-amber-500 text-black text-xs font-bold px-2 py-0.5 rounded-full">
                     Jij
                   </span>
                 )}
 
                 <div className="flex items-center gap-4">
                   {/* Avatar */}
-                  <div className="w-14 h-14 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-2xl flex items-center justify-center text-3xl shadow-sm flex-shrink-0">
+                  <div className="w-14 h-14 bg-gradient-to-br from-amber-500/20 to-amber-600/20 rounded-2xl flex items-center justify-center text-3xl border border-amber-500/20 flex-shrink-0">
                     {participant.emoji}
                   </div>
 
                   {/* Info */}
                   <div className="flex-1 min-w-0">
-                    <p className="font-bold text-gray-800 text-lg truncate">
+                    <p className="font-bold text-white text-lg truncate">
                       {participant.name}
                     </p>
-                    <p className="text-xs text-gray-400 mt-0.5">
+                    <p className="text-xs text-zinc-500 mt-0.5">
                       Lid sinds {formatDate(participant.joinedAt)}
                     </p>
                   </div>
@@ -109,8 +109,8 @@ export default function ParticipantsPanel({ data, currentUser }: PanelProps) {
                     onClick={() => handleLeave(participant.id)}
                     disabled={isLeaving}
                     className="
-                      mt-4 w-full text-sm font-medium text-red-500 border border-red-200
-                      rounded-lg py-1.5 px-3 hover:bg-red-50 hover:border-red-300
+                      mt-4 w-full text-sm font-medium text-red-400 border border-red-800
+                      rounded-lg py-1.5 px-3 hover:bg-red-900/40 hover:border-red-700
                       transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed
                     "
                   >
@@ -125,9 +125,9 @@ export default function ParticipantsPanel({ data, currentUser }: PanelProps) {
 
       {/* Fun stats footer */}
       {participants.length > 0 && (
-        <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-4 border border-indigo-100">
-          <p className="text-sm text-indigo-700 font-medium text-center">
-            🎉 Met z&#39;n {participants.length}en wordt het een geweldig weekend!
+        <div className="bg-amber-500/10 rounded-xl p-4 border border-amber-500/20">
+          <p className="text-sm text-amber-400 font-medium text-center">
+            🍻 Met z&#39;n {participants.length}en wordt het een legendarisch weekend!
           </p>
         </div>
       )}

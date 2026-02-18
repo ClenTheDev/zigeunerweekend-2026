@@ -1,7 +1,8 @@
 export interface Participant {
   id: string;
   name: string;
-  emoji: string; // fun avatar emoji
+  email: string;
+  emoji: string;
   joinedAt: number;
 }
 
