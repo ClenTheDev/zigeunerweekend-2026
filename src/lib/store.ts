@@ -17,11 +17,12 @@ const defaultData: WeekendData = {
 const memoryStore = new Map<string, WeekendData>();
 
 function getRedis(): Redis | null {
-  if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
-    return new Redis({
-      url: process.env.UPSTASH_REDIS_REST_URL,
-      token: process.env.UPSTASH_REDIS_REST_TOKEN,
-    });
+  // Support both Upstash direct and Vercel KV integration env var names
+  const url = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+
+  if (url && token) {
+    return new Redis({ url, token });
   }
   return null;
 }
