@@ -6,7 +6,7 @@ const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 export function useWeekendData() {
   const { data, error, isLoading } = useSWR<WeekendData>('/api/data', fetcher, {
-    refreshInterval: 3000,
+    refreshInterval: 10000,
     revalidateOnFocus: true,
   });
 

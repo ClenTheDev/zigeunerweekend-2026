@@ -132,8 +132,8 @@ export default function ActivitiesPanel({ data, currentUser }: PanelProps) {
           type="submit"
           disabled={submitting || !title.trim()}
           className="
-            bg-amber-600 text-black text-sm font-bold rounded-lg
-            px-5 py-2.5 hover:bg-amber-500 active:bg-amber-700
+            w-full sm:w-auto bg-amber-600 text-black text-sm font-bold rounded-lg
+            px-5 py-3 sm:py-2.5 hover:bg-amber-500 active:bg-amber-700
             disabled:opacity-50 disabled:cursor-not-allowed transition-colors
           "
         >
@@ -169,16 +169,16 @@ export default function ActivitiesPanel({ data, currentUser }: PanelProps) {
                   }
                 `}
               >
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-3 sm:gap-4">
                   {/* Vote button */}
                   <button
                     onClick={() => handleVote(activity.id)}
                     disabled={isVoting}
                     className={`
                       flex-shrink-0 flex flex-col items-center justify-center
-                      w-16 rounded-xl py-2.5 px-1
+                      w-14 sm:w-16 rounded-xl py-2.5 px-1
                       transition-all duration-200 font-bold text-xl
-                      disabled:opacity-60 disabled:cursor-not-allowed
+                      disabled:opacity-60 disabled:cursor-not-allowed active:scale-95
                       ${hasVoted
                         ? 'bg-amber-500/20 text-amber-400 border-2 border-amber-500 hover:bg-amber-500/30'
                         : 'bg-zinc-800 text-zinc-500 border-2 border-zinc-700 hover:bg-zinc-700 hover:text-zinc-300'

@@ -108,7 +108,7 @@ export default function WishesPanel({ data, currentUser }: PanelProps) {
             value={wishCategory}
             onChange={(e) => setWishCategory(e.target.value as Category)}
             className="
-              sm:w-36 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm
+              sm:w-36 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-3 sm:py-2.5 text-sm
               text-white focus:outline-none focus:ring-2 focus:ring-amber-500
               focus:border-transparent transition
             "
@@ -127,7 +127,7 @@ export default function WishesPanel({ data, currentUser }: PanelProps) {
             placeholder="Typ hier jouw wens..."
             maxLength={200}
             className="
-              flex-1 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-sm
+              flex-1 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-3 sm:py-2.5 text-sm
               text-white placeholder:text-zinc-500 focus:outline-none
               focus:ring-2 focus:ring-amber-500 focus:border-transparent transition
             "
@@ -137,8 +137,8 @@ export default function WishesPanel({ data, currentUser }: PanelProps) {
             type="submit"
             disabled={submitting || !wishText.trim()}
             className="
-              sm:w-28 bg-amber-600 text-black text-sm font-bold rounded-lg
-              px-4 py-2.5 hover:bg-amber-500 active:bg-amber-700
+              w-full sm:w-28 bg-amber-600 text-black text-sm font-bold rounded-lg
+              px-4 py-3 sm:py-2.5 hover:bg-amber-500 active:bg-amber-700
               disabled:opacity-50 disabled:cursor-not-allowed transition-colors
             "
           >

@@ -194,7 +194,7 @@ export default function ExpensesPanel({ data, currentUser }: PanelProps) {
             placeholder="Omschrijving, bijv. Boodschappen..."
             maxLength={100}
             className="
-              rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-sm
+              rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-3 sm:py-2.5 text-sm
               text-white placeholder:text-zinc-500 focus:outline-none
               focus:ring-2 focus:ring-amber-500 focus:border-transparent transition
             "
@@ -209,7 +209,7 @@ export default function ExpensesPanel({ data, currentUser }: PanelProps) {
               onChange={(e) => setAmountStr(e.target.value)}
               placeholder="0.00"
               className="
-                w-full rounded-lg border border-zinc-700 bg-zinc-800 pl-8 pr-4 py-2.5 text-sm
+                w-full rounded-lg border border-zinc-700 bg-zinc-800 pl-8 pr-4 py-3 sm:py-2.5 text-sm
                 text-white placeholder:text-zinc-500 focus:outline-none
                 focus:ring-2 focus:ring-amber-500 focus:border-transparent transition
               "
@@ -238,8 +238,8 @@ export default function ExpensesPanel({ data, currentUser }: PanelProps) {
                   type="button"
                   onClick={() => toggleSplit(p.id)}
                   className={`
-                    flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-bold
-                    border-2 transition-all duration-150
+                    flex items-center gap-1.5 px-3 py-2 sm:py-1.5 rounded-full text-sm font-bold
+                    border-2 transition-all duration-150 active:scale-95
                     ${checked
                       ? 'bg-amber-500 text-black border-amber-500'
                       : 'bg-zinc-800 text-zinc-400 border-zinc-700 hover:border-amber-500/50 hover:text-zinc-200'
@@ -262,8 +262,8 @@ export default function ExpensesPanel({ data, currentUser }: PanelProps) {
           type="submit"
           disabled={submitting || !description.trim() || !amountValid || splitWith.length === 0}
           className="
-            bg-amber-600 text-black text-sm font-bold rounded-lg
-            px-5 py-2.5 hover:bg-amber-500 active:bg-amber-700
+            w-full sm:w-auto bg-amber-600 text-black text-sm font-bold rounded-lg
+            px-5 py-3 sm:py-2.5 hover:bg-amber-500 active:bg-amber-700
             disabled:opacity-50 disabled:cursor-not-allowed transition-colors
           "
         >
@@ -285,9 +285,9 @@ export default function ExpensesPanel({ data, currentUser }: PanelProps) {
             {settlements.map((s, i) => (
               <div
                 key={i}
-                className="flex items-center justify-between bg-zinc-900 rounded-lg px-4 py-2.5 border border-amber-500/20"
+                className="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-zinc-900 rounded-lg px-4 py-3 sm:py-2.5 border border-amber-500/20 gap-1 sm:gap-0"
               >
-                <div className="flex items-center gap-2 text-sm font-medium text-zinc-300">
+                <div className="flex items-center gap-2 text-sm font-medium text-zinc-300 flex-wrap">
                   <span>{getParticipantEmoji(s.from)}</span>
                   <span>{getParticipantName(s.from)}</span>
                   <span className="text-zinc-600">&#8594;</span>

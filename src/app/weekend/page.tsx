@@ -23,6 +23,7 @@ type TabId =
 interface TabConfig {
   id: TabId;
   label: string;
+  shortLabel: string;
   icon: string;
   /** Returns the badge count given the current data + current user */
   badge?: (
@@ -35,36 +36,42 @@ const TABS: TabConfig[] = [
   {
     id: 'deelnemers',
     label: 'Deelnemers',
+    shortLabel: 'Groep',
     icon: '👥',
     badge: (data) => data.participants.length,
   },
   {
     id: 'eten',
     label: 'Eten & Drinken',
+    shortLabel: 'Eten',
     icon: '🍕',
     badge: (data) => data.wishes.length,
   },
   {
     id: 'activiteiten',
     label: 'Activiteiten',
+    shortLabel: 'Actie',
     icon: '🎯',
     badge: (data) => data.activities.length,
   },
   {
     id: 'paklijst',
     label: 'Paklijst',
+    shortLabel: 'Pak',
     icon: '🎒',
     badge: (data) => data.packList.length,
   },
   {
     id: 'kosten',
     label: 'Kosten',
+    shortLabel: 'Geld',
     icon: '💸',
     badge: (data) => data.expenses.length,
   },
   {
     id: 'planning',
     label: 'Planning',
+    shortLabel: 'Plan',
     icon: '📅',
     badge: (data) => data.schedule.length,
   },
@@ -162,44 +169,43 @@ export default function WeekendPage() {
           boxShadow: '0 4px 32px 0 rgba(0,0,0,0.6)',
         }}
       >
-        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+        <div className="max-w-4xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-3">
           {/* Title */}
-          <div className="flex items-center gap-3 min-w-0">
-            <span className="text-2xl flex-shrink-0">🍺</span>
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <span className="text-xl sm:text-2xl flex-shrink-0">🍺</span>
             <div className="min-w-0">
               <h1
-                className="text-lg font-black tracking-widest leading-tight uppercase truncate"
+                className="text-sm sm:text-lg font-black tracking-wide sm:tracking-widest leading-tight uppercase truncate"
                 style={{
                   background: 'linear-gradient(90deg, #f59e0b 0%, #84cc16 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   backgroundClip: 'text',
-                  letterSpacing: '0.12em',
                 }}
               >
                 ZIGEUNERWEEKEND
               </h1>
               <p
-                className="text-xs font-bold tracking-widest hidden sm:block truncate uppercase"
-                style={{ color: '#57534e', letterSpacing: '0.1em' }}
+                className="text-[10px] sm:text-xs font-bold tracking-wider sm:tracking-widest truncate uppercase"
+                style={{ color: '#57534e' }}
               >
-                6-8 MAART 2026 &bull; Resort Arcen
+                6-8 MAART 2026
               </p>
             </div>
           </div>
 
           {/* User chip + logout */}
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
             <span
-              className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-bold"
+              className="inline-flex items-center gap-1 sm:gap-1.5 rounded-full px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-bold"
               style={{
                 background: 'rgba(251,191,36,0.08)',
                 border: '1.5px solid rgba(251,191,36,0.4)',
                 color: '#fbbf24',
               }}
             >
-              <span className="text-base">{currentUser.emoji}</span>
-              <span className="hidden xs:inline truncate max-w-[100px]">
+              <span className="text-sm sm:text-base">{currentUser.emoji}</span>
+              <span className="truncate max-w-[70px] sm:max-w-[100px]">
                 {currentUser.name}
               </span>
             </span>
@@ -207,7 +213,7 @@ export default function WeekendPage() {
               onClick={handleLogout}
               title="Uitloggen"
               aria-label="Uitloggen"
-              className="text-xs font-bold px-3 py-1.5 rounded-full transition-all duration-150 cursor-pointer"
+              className="text-xs font-bold px-2 sm:px-3 py-1 sm:py-1.5 rounded-full transition-all duration-150 cursor-pointer"
               style={{
                 background: 'transparent',
                 border: '1.5px solid rgba(120,113,108,0.4)',
@@ -233,7 +239,7 @@ export default function WeekendPage() {
         {/* ---------------------------------------------------------------- */}
         <nav
           aria-label="Secties"
-          className="flex overflow-x-auto no-scrollbar"
+          className="hidden sm:flex overflow-x-auto no-scrollbar"
           style={{ borderTop: '1px solid rgba(251,191,36,0.08)' }}
         >
           <div className="flex min-w-max px-2 gap-0 max-w-4xl mx-auto w-full">
@@ -255,7 +261,6 @@ export default function WeekendPage() {
                     letterSpacing: '0.06em',
                   }}
                 >
-                  {/* Icon row with badge */}
                   <span className="relative">
                     <span className="text-base leading-none">{tab.icon}</span>
                     {count > 0 && (
@@ -272,7 +277,6 @@ export default function WeekendPage() {
                       </span>
                     )}
                   </span>
-                  {/* Label */}
                   <span className="leading-none">{tab.label}</span>
                 </button>
               );
@@ -330,9 +334,10 @@ export default function WeekendPage() {
           WebkitBackdropFilter: 'blur(16px)',
           borderTop: '1px solid rgba(251,191,36,0.15)',
           boxShadow: '0 -8px 32px 0 rgba(0,0,0,0.7)',
+          paddingBottom: 'env(safe-area-inset-bottom, 0px)',
         }}
       >
-        <div className="flex overflow-x-auto no-scrollbar">
+        <div className="grid grid-cols-6">
           {TABS.map((tab) => {
             const isActive = activeTab === tab.id;
             const count = tab.badge ? tab.badge(data, currentUser.id) : 0;
@@ -341,15 +346,14 @@ export default function WeekendPage() {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 aria-selected={isActive}
-                className="relative flex flex-col items-center gap-1 px-3 py-2 flex-1 min-w-[60px] text-xs font-bold transition-all duration-150 cursor-pointer"
+                className="relative flex flex-col items-center justify-center gap-0.5 py-2 min-h-[56px] text-xs font-bold transition-all duration-150 cursor-pointer active:scale-95"
                 style={{
                   color: isActive ? '#f59e0b' : '#44403c',
                 }}
               >
-                {/* Amber glow top indicator for active tab */}
                 {isActive && (
                   <span
-                    className="absolute top-0 inset-x-1 h-0.5 rounded-b-full"
+                    className="absolute top-0 inset-x-2 h-0.5 rounded-b-full"
                     style={{
                       background: 'linear-gradient(90deg, #f59e0b, #84cc16)',
                       boxShadow: '0 0 8px 1px rgba(245,158,11,0.6)',
@@ -371,10 +375,10 @@ export default function WeekendPage() {
                   )}
                 </span>
                 <span
-                  className="truncate w-full text-center leading-none uppercase"
+                  className="leading-none uppercase"
                   style={{ fontSize: '9px', letterSpacing: '0.04em' }}
                 >
-                  {tab.label}
+                  {tab.shortLabel}
                 </span>
               </button>
             );

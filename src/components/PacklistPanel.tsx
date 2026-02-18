@@ -158,7 +158,7 @@ export default function PacklistPanel({ data, currentUser }: PanelProps) {
         <h3 className="font-bold text-zinc-300 text-sm uppercase tracking-widest mb-3">
           Item toevoegen
         </h3>
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           <input
             type="text"
             value={itemText}
@@ -166,7 +166,7 @@ export default function PacklistPanel({ data, currentUser }: PanelProps) {
             placeholder="Wat moet er mee? bijv. Slaapzak..."
             maxLength={100}
             className="
-              flex-1 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-sm
+              flex-1 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-3 sm:py-2.5 text-sm
               text-white placeholder:text-zinc-500 focus:outline-none
               focus:ring-2 focus:ring-amber-500 focus:border-transparent transition
             "
@@ -175,8 +175,8 @@ export default function PacklistPanel({ data, currentUser }: PanelProps) {
             type="submit"
             disabled={submitting || !itemText.trim()}
             className="
-              bg-amber-600 text-black text-sm font-bold rounded-lg
-              px-5 py-2.5 hover:bg-amber-500 active:bg-amber-700
+              w-full sm:w-auto bg-amber-600 text-black text-sm font-bold rounded-lg
+              px-5 py-3 sm:py-2.5 hover:bg-amber-500 active:bg-amber-700
               disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap
             "
           >

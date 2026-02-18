@@ -127,13 +127,13 @@ export default function SchedulePanel({ data, currentUser }: PanelProps) {
           Activiteit toevoegen
         </h3>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {/* Day picker */}
           <select
             value={selectedDay}
             onChange={(e) => setSelectedDay(e.target.value)}
             className="
-              rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm
+              rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-3 text-sm
               text-white focus:outline-none focus:ring-2 focus:ring-amber-500
               focus:border-transparent transition
             "
@@ -149,7 +149,7 @@ export default function SchedulePanel({ data, currentUser }: PanelProps) {
             value={time}
             onChange={(e) => setTime(e.target.value)}
             className="
-              rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-sm
+              rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-3 text-sm
               text-white focus:outline-none focus:ring-2 focus:ring-amber-500
               focus:border-transparent transition
             "
@@ -163,24 +163,19 @@ export default function SchedulePanel({ data, currentUser }: PanelProps) {
             placeholder="Wat gaan jullie doen?"
             maxLength={150}
             className="
-              sm:col-span-3 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-sm
+              col-span-2 sm:col-span-3 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm
               text-white placeholder:text-zinc-500 focus:outline-none
               focus:ring-2 focus:ring-amber-500 focus:border-transparent transition
             "
           />
         </div>
 
-        {/* Activity input on its own row */}
-        <div className="sm:hidden">
-          {/* Already rendered in grid above for desktop — handled via col-span-3 */}
-        </div>
-
         <button
           type="submit"
           disabled={submitting || !activity.trim() || !time}
           className="
-            bg-amber-600 text-black text-sm font-bold rounded-lg
-            px-5 py-2.5 hover:bg-amber-500 active:bg-amber-700
+            w-full sm:w-auto bg-amber-600 text-black text-sm font-bold rounded-lg
+            px-5 py-3 sm:py-2.5 hover:bg-amber-500 active:bg-amber-700
             disabled:opacity-50 disabled:cursor-not-allowed transition-colors
           "
         >

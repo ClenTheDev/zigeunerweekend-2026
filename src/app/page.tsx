@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useWeekendData, postData } from '@/lib/hooks';
 
-// Party-themed avatars — no cute stuff
-const AVATARS = ['🍺', '🎸', '🔥', '🎪', '🎶', '🏕️', '🎲', '🃏', '🥃', '🍻', '🎯', '🚀'];
+// Male character avatars
+const AVATARS = ['🧔', '🕺', '🤠', '🥷', '🧙‍♂️', '🏄‍♂️', '👨‍🚀', '👨‍🎤', '🦸‍♂️', '🤵', '👨‍🍳', '🏋️‍♂️'];
 
 const LOCAL_STORAGE_KEY = 'vriendenweekend_participant';
 
@@ -59,7 +59,7 @@ export default function LandingPage() {
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [selectedEmoji, setSelectedEmoji] = useState('🍺');
+  const [selectedEmoji, setSelectedEmoji] = useState('🧔');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [existingUser, setExistingUser] = useState<{
